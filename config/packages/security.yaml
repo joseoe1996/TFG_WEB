@@ -21,7 +21,7 @@ security:
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
-                path: app_logout
+                path: pagina_inicio
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -34,6 +34,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/login, roles: }
+        - { path: ^/register, roles: }
         - { path: ^/inicio, roles: ROLE_USER }
-        - { path: ^/, roles: }
        
