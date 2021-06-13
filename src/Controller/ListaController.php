@@ -7,24 +7,28 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\httpClient;
 
-class ListaController extends AbstractController
-{
+class ListaController extends AbstractController {
+
     /**
      * @Route("/inicio/lista", name="lista")
      */
-    public function index(httpClient $cliente): Response
-    {
+    public function index(httpClient $cliente): Response {
         // rclone rcd --rc-serve --rc-no-auth
-       $userlog=$this->getUser()->getUsername();
+        $userlog = $this->getUser()->getUsername();
 
-       $content=$cliente->lista('jose:');
-      // var_dump($userlog);
-      // var_dump($statusCode);
-      // var_dump($contentType);
-      print_r($content);
-      
+        $lista = $cliente->lista('jose:', '');
+        //1ºcarpetas 2º archivos
+        $separados=$cliente->separar($lista);
+        
+        $carpetas=$separados['carpeta'];
+        $archivos=$separados['archivos'];
+       
+        
         return $this->render('lista/index.html.twig', [
-            'controller_name' => 'ListaController',
+                    'controller_name' => 'ListaController',
+                    'carpetas' => $carpetas,
+                    'archivos' => $archivos
         ]);
     }
+
 }
