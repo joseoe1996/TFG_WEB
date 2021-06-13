@@ -10,14 +10,17 @@ use App\Service\httpClient;
 class ListaController extends AbstractController {
 
     /**
-     * @Route("/inicio/lista", name="lista")
+     * @Route("/inicio/lista/{ruta}", name="lista")
      */
-    public function index(httpClient $cliente): Response {
+    public function index(httpClient $cliente, string $ruta=""): Response {
         // rclone rcd --rc-serve --rc-no-auth
         $userlog = $this->getUser()->getUsername();
-
-        $lista = $cliente->lista('jose:', '');
-        //1ºcarpetas 2º archivos
+        
+       
+        $final=preg_replace('/_/', '/', $ruta);
+       
+        $lista = $cliente->lista('jose:', $final);
+        
         $separados=$cliente->separar($lista);
         
         $carpetas=$separados['carpeta'];

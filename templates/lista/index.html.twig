@@ -13,35 +13,32 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Carpeta</th>
+                    <th scope="col">Carpetas</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td> {% for car in carpetas %}
-                <li>{{ car }}</li>
-                {% endfor %} </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Archivos</th>
+                    <td> {% for name, path in carpetas %}
+            <div class="form-group"><a href="{{path('lista',{ruta: path})}}" class="btn" type="submit" >{{name}}</a></div>
+            {% endfor %} </td>
                 </tr>
-            </thead>
-            <tbody>
-                <tr>
-                   <td> {% for arch in archivos %}
-                <li>{{ arch }}</li>
+                </tbody>
+            </table>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Archivos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> {% for name, path in archivos %}
+                <li>{{ name }}</li>
                 {% endfor %} </td>
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                    </tbody>
+                </table>
 
-        <div class="form-group"><a href="#" class="btn btn-primary btn-lg"" type="submit" style="background-color: rgb(255,255,255);color: rgb(0,98,204);">Login</a></div>
-
-
-    </div>
-{% endblock %}
+            </div>
+            {% endblock %}

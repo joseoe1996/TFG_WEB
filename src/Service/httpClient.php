@@ -33,16 +33,14 @@ class httpClient {
 
     //Dividir un directorio entre carpetas y archivos
     public function separar($lista) {
-        $carpeta;
-        $archivos;
+        $carpeta=array();
+        $archivos=array();
         foreach ($lista as $arch) {
             foreach ($arch as $value) {
                 if ($value['IsDir'] == 1) {
-                    // var_dump('Es directorio: ' . $value['Name']);
-                    $carpeta[] = $value['Name'];
+                     $carpeta[$value['Name']]= preg_replace('~/~', '_', $value['Path']);
                 } else {
-                    // var_dump('No es directorio: ' . $value['Name']);
-                    $archivos[] = $value['Name'];
+                    $archivos[$value['Name']]=$value['Path'];
                 }
             }
         }
