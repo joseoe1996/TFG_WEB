@@ -18,3 +18,5 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 /nbproject/private/
+/src/Service/onedrive/vendor/
+/src/Service/onedrive/nbproject/private/

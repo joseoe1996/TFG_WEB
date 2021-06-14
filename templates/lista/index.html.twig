@@ -19,7 +19,7 @@
             <tbody>
                 <tr>
                     <td> {% for name, path in carpetas %}
-            <div class="form-group"><a href="{{path('lista',{ruta: path})}}" class="btn" type="submit" >{{name}}</a></div>
+            <div class="form-group"><a href="{{path('lista_archivos',{ruta: path})}}" class="btn" type="submit" >{{name}}</a></div>
             {% endfor %} </td>
                 </tr>
                 </tbody>

@@ -10,7 +10,7 @@ use App\Service\httpClient;
 class ListaController extends AbstractController {
 
     /**
-     * @Route("/inicio/lista/{ruta}", name="lista")
+     * @Route("/inicio/lista/{ruta}", name="lista_archivos")
      */
     public function index(httpClient $cliente, string $ruta=""): Response {
         // rclone rcd --rc-serve --rc-no-auth

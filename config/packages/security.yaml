@@ -37,5 +37,5 @@ security:
         - { path: ^/login, roles: }
         - { path: ^/register, roles: }
         - { path: ^/inicio, roles: ROLE_USER }
-        - { path: ^/, roles: }
+        #- { path: ^/, roles: }
        
