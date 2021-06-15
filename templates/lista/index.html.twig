@@ -10,35 +10,45 @@
 
     <div class="example-wrapper">
         <h1>Hello {{ controller_name }}! ✅</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Carpetas</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td> {% for name, path in carpetas %}
-            <div class="form-group"><a href="{{path('lista_archivos',{ruta: path})}}" class="btn" type="submit" >{{name}}</a></div>
-            {% endfor %} </td>
-                </tr>
-                </tbody>
-            </table>
-
+        {% for name, asociados in lista %}
+            <h2>{{ name }}</h2>
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Archivos</th>
+                        <th scope="col">Carpetas</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td> {% for name, path in archivos %}
-                <li>{{ name }}</li>
-                {% endfor %} </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <td> {% for key, carpetas in asociados %}
+                            {% if key=='carpetas' %}
+                            {% for nombre_carpeta, path in carpetas %}
+                                <div class="form-group"><a href="{{path('lista_archivos',{ruta: path, conexion: name})}}" class="btn" type="submit" >{{nombre_carpeta}}</a></div>
+                            {% endfor %} </td>
+                            {% endif %}
+                        {% endfor %}
+                </tr>
+            </tbody>
+        </table>
 
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Archivos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> {% for key, archivos in asociados %}
+                        {% if key == 'archivos' %}
+                        {% for nombre_archivos, path in archivos %}
+                <li>{{ nombre_archivos }}</li>
+            {% endfor %} </td
+             {% endif %}
+            {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+            {% endfor %}
             </div>
             {% endblock %}
