@@ -55,7 +55,7 @@ class onedriveToken {
 
                 // Verify token
                 // Save it to local server session data
-                //echo $token->getToken();
+
                 $ref = 'https://graph.microsoft.com/v1.0/me/';
                 $prueba = $this->provider->get($ref, $token);
                 $this->id = $prueba['id'];
@@ -69,8 +69,6 @@ class onedriveToken {
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $exc) {
             echo $exc->getCode() . "<br>";
             echo $exc->getMessage() . "<br>";
-            //echo $exc->getTraceAsString() . "<br>";
-            //print_r($exc->getResponseBody());
         }
     }
 
@@ -99,16 +97,7 @@ class onedriveToken {
         $yourrefreshtoken = $token->getRefreshToken();
         $type = $token->getValues()['token_type'];
         $expiry = $tiempo->format("Y-m-d\TH:i:s.uP");
-        /*
-          echo '{' .
-          '"access_token":' . '"' . $youraccesstoken . '"' .
-          ',"token_type":' . '"' . $type . '"' .
-          ',"refresh_token":' . '"' . $yourrefreshtoken . '"' .
-          ',"expiry":' . '"' . $expiry . '"' .
-          '}'
-          ;
 
-         */
         $res = '{' .
                 '"access_token":' . '"' . $youraccesstoken . '"' .
                 ',"token_type":' . '"' . $type . '"' .

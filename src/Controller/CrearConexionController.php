@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\onedriveToken;
+use App\Entity\Conexiones;
 
 class CrearConexionController extends AbstractController {
 
@@ -13,7 +14,9 @@ class CrearConexionController extends AbstractController {
      * @Route("/inicio/lista_conexion", name="lista_conexion")
      */
     public function index(): Response {
-
+        
+       $userlog = $this->getUser()->getId();
+       
         return $this->render('crear_conexion/index.html.twig', [
                     'controller_name' => 'CrearConexionController',
         ]);
@@ -25,7 +28,7 @@ class CrearConexionController extends AbstractController {
     public function onedrive(): Response {
         
         //Usuario actual
-        $userlog = $this->getUser()->getUsername();
+        
         //Lista de conexiones del susario actual
         $conexiones = NULL;
         $objeto = new onedriveToken();
