@@ -10,7 +10,10 @@
 
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
-<div class="form-group"><a href="{{ path('crear_onedrive') }}" class="btn btn-primary btn-lg" type="submit" style="background-color: rgb(255,255,255);color: rgb(0,98,204);">Crear Conexion</a></div>
+    {% for con in conexiones %}
+        <li>{{ con.alias }}</li>
+    {% endfor %}
+<div class="form-group"><a href="{{ path('crear_onedrive') }}" class="btn btn-primary btn-lg" type="submit" style="background-color: rgb(255,255,255);color: rgb(0,98,204);">Onedrive</a></div>
    
     
 </div>

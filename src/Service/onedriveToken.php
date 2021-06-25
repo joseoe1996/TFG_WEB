@@ -23,7 +23,6 @@ class onedriveToken {
             //Optional
             'defaultEndPointVersion' => '2.0'
         ]);
-
         // Set to use v2 API, skip the line or set the value to Azure::ENDPOINT_VERSION_1_0 if willing to use v1 API
         $this->provider->defaultEndPointVersion = Provider\Azure::ENDPOINT_VERSION_2_0;
 
@@ -59,7 +58,7 @@ class onedriveToken {
                 $ref = 'https://graph.microsoft.com/v1.0/me/';
                 $prueba = $this->provider->get($ref, $token);
                 $this->id = $prueba['id'];
-                $this->name = $prueba['userPrincipalName'];
+                $this->name = $prueba['displayName'];
                 return $token;
             } else {
                 echo 'Invalid state';
@@ -107,7 +106,7 @@ class onedriveToken {
         return $res;
     }
 
-    function getId() {
+    function getID() {
         return $this->id;
     }
 

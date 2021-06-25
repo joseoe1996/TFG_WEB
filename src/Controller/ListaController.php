@@ -14,8 +14,7 @@ class ListaController extends AbstractController {
      * @Route("/inicio/lista/{conexion}/{ruta}", name="lista_archivos")
      */
     public function index(httpClient $cliente, ConexionesRepository $conerepo, string $ruta = "", string $conexion = ""): Response {
-        // rclone rcd --rc-serve --rc-no-auth
-       
+               
         $userlog = $this->getUser()->getId();
       
 

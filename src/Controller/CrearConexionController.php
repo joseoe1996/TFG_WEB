@@ -5,42 +5,37 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\onedriveToken;
-use App\Entity\Conexiones;
+use App\Service\httpClient;
+use App\Repository\ConexionesRepository;
 
 class CrearConexionController extends AbstractController {
 
     /**
      * @Route("/inicio/lista_conexion", name="lista_conexion")
      */
-    public function index(): Response {
-        
-       $userlog = $this->getUser()->getId();
-       
+    public function index(ConexionesRepository $con): Response {
+
+        $userlog = $this->getUser()->getId();
+
+        //Lista de conexiones del susario actual
+        $criteria=['user'=>$userlog];
+        $conexiones = $con->findBy($criteria);
+
         return $this->render('crear_conexion/index.html.twig', [
                     'controller_name' => 'CrearConexionController',
+                    'conexiones' => $conexiones
         ]);
     }
 
     /**
      * @Route("/inicio/crear_onedrive", name="crear_onedrive")
      */
-    public function onedrive(): Response {
+    public function onedrive(httpClient $client): Response {
         
-        //Usuario actual
-        
-        //Lista de conexiones del susario actual
-        $conexiones = NULL;
-        $objeto = new onedriveToken();
+       
+        $client->onedrive();
 
-        $token = $objeto->obtenerToken();
-        $token_modificado = $objeto->token($token);
-        $id = $objeto->getId();
-        $name = $objeto->getName();
-     
-        //Crear conexion hacia el rclone y guardar en la BD
+        return $this->redirectToRoute('lista_conexion');
+    }
 
-            return $this->redirectToRoute('lista_conexion');
-
-}
 }
