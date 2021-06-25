@@ -1,21 +1,23 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+namespace App\Service;
+
+require 'C:\xampp\htdocs\drive\vendor\autoload.php';
 
 use League\OAuth2\Client\Provider\Google;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class driveToken {
 
     protected $provider;
 
-    public function __construct(string $client_id, string $secreto, string $uri) {
+    public function __construct() {
         $this->provider = new Google([
-            'clientId' => $client_id,
-            'clientSecret' => $secreto,
-            'redirectUri' => $uri,
+            'clientId' => "673961889608-7bhejsqnglluor9prgrb03e13g3s18mg.apps.googleusercontent.com",
+            'clientSecret' => "tzXjmMQkz1qZ90FNNDtl2XKy",
+            'redirectUri' => "http://localhost:8000/inicio/crear_drive",
         ]);
     }
-    
 
     public function getToken() {
         if (!empty($_GET['error'])) {
@@ -31,7 +33,8 @@ class driveToken {
                 'scope' => ['https://www.googleapis.com/auth/drive']
             ]);
             $_SESSION['oauth2state'] = $this->provider->getState();
-            header('Location: ' . $authUrl);
+            $response = new RedirectResponse($authUrl);
+            $response->send();
             exit;
         } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
 
@@ -47,25 +50,26 @@ class driveToken {
             return $token;
         }
     }
-    
-    public function token($token){
-        if($token!=NULL){
-        $tiempo = new DateTime();
-        $i = new DateInterval('PT1H');
-        $tiempo->add($i);
 
-        $youraccesstoken = $token->getToken();
-        $yourrefreshtoken = $token->getRefreshToken();
-        $type = $token->getValues()['token_type'];
-        $expiry = $tiempo->format("Y-m-d\TH:i:s.uP");
-        
-        $res = '{' .
-                '"access_token":' . '"' . $youraccesstoken . '"' .
-                ',"token_type":' . '"' . $type . '"' .
-                ',"refresh_token":' . '"' . $yourrefreshtoken . '"' .
-                ',"expiry":' . '"' . $expiry . '"' .
-                '}';
-        return $res;
+    public function token($token) {
+        if ($token != NULL) {
+            $tiempo = new \DateTime();
+            $i = new \DateInterval('PT1H');
+            $tiempo->add($i);
+            $jwt=$token->getValues()['id_token'];
+            var_dump(json_decode($jwt));
+            $youraccesstoken = $token->getToken();
+            $yourrefreshtoken = $token->getRefreshToken();
+            $type = $token->getValues()['token_type'];
+            $expiry = $tiempo->format("Y-m-d\TH:i:s.uP");
+
+            $res = '{' .
+                    '"access_token":' . '"' . $youraccesstoken . '"' .
+                    ',"token_type":' . '"' . $type . '"' .
+                    ',"refresh_token":' . '"' . $yourrefreshtoken . '"' .
+                    ',"expiry":' . '"' . $expiry . '"' .
+                    '}';
+            return $res;
         } else {
             echo 'Token nullo <br>';
         }
