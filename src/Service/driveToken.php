@@ -56,8 +56,10 @@ class driveToken {
             $tiempo = new \DateTime();
             $i = new \DateInterval('PT1H');
             $tiempo->add($i);
+            /*
             $jwt=$token->getValues()['id_token'];
             var_dump(json_decode($jwt));
+             */
             $youraccesstoken = $token->getToken();
             $yourrefreshtoken = $token->getRefreshToken();
             $type = $token->getValues()['token_type'];

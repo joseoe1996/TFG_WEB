@@ -6,10 +6,17 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Service\onedriveToken;
 use App\Entity\Conexiones;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\driveToken;
 
 const IP = '127.0.0.1';
 const PUERTO = '5572';
 const DIR = IP . ':' . PUERTO;
+
+const CLIENT_ID_ONEDRIVE='088e81a1-5274-44dd-bae8-fe657686b19f';
+const SECRETO_ONEDRIVE='Ag4.cX~HE-x27aLO8W.9a~rZ77e_iqR3H_';
+
+const CLIENTE_ID_DRIVE='673961889608-7bhejsqnglluor9prgrb03e13g3s18mg.apps.googleusercontent.com';
+const SECRETO_DRIVE='tzXjmMQkz1qZ90FNNDtl2XKy';
 
 class httpClient extends AbstractController {
 
@@ -55,7 +62,7 @@ class httpClient extends AbstractController {
         return $res;
     }
 
-    //Crear la conexion onedrive en RCLONE
+    //Crear la conexion onedrive
     public function onedrive() {
         //Crear el token de validacion y el nombre de la conexion
         $objeto = new onedriveToken();
@@ -67,14 +74,14 @@ class httpClient extends AbstractController {
 
         $json = array("config_is_local" => "false"
             , "config_refresh_token" => "false"
-            , "client_id" => '088e81a1-5274-44dd-bae8-fe657686b19f'
-            , "client_secret" => 'Ag4.cX~HE-x27aLO8W.9a~rZ77e_iqR3H_'
+            , "client_id" => CLIENT_ID_ONEDRIVE
+            , "client_secret" => SECRETO_ONEDRIVE
             , "region" => 'global'
             , "drive_id" => $id
             , "drive_type" => 'personal'
             , "token" => $token_modificado
         );
-
+        //Creamos la conexion con RCLONE
         $response = $this->client->request('POST', 'http://' . DIR . '/config/create', [
             // these values are automatically encoded before including them in the URL
             'query' => [
@@ -84,9 +91,55 @@ class httpClient extends AbstractController {
                 'parameters' => json_encode($json)
             ],
         ]);
+        //Guardamos esa conexion en la BD
         $conexion = new Conexiones();
         $conexion->setNombre($name);
         $conexion->setTipo('onedrive');
+        $conexion->setUser($this->getUser());
+        $conexion->setAlias($alias);
+        //Base de datos
+        $em = $this->getDoctrine()->getManager();
+        try {
+            $em->persist($conexion);
+            $em->flush();
+        } catch (\Exception $e) {
+            $em->rollback();
+            throw $e;
+        }
+    }
+    //Crear conexion drive
+    public function drive() {
+
+        $objeto = new driveToken();
+        $token = $objeto->getToken();
+        $token_final = $objeto->token($token);
+
+        $jwt = $token->getValues()['id_token'];
+        $claves = preg_split('[\.]', $jwt);
+
+        $alias = json_decode(base64_decode($claves[1]))->name;
+        $name = json_decode(base64_decode($claves[1]))->sub . '_drive';
+
+        $json = array("config_is_local" => "false"
+            , "config_refresh_token" => "false"
+            , "client_id" => CLIENTE_ID_DRIVE
+            , "client_secret" => SECRETO_DRIVE
+            , "token" => $token_final
+        );
+        //Creamos la conexion con RCLONE
+        $response = $this->client->request('POST', 'http://' . DIR . '/config/create', [
+            // these values are automatically encoded before including them in the URL
+            'query' => [
+                'name' => $name,
+                'type' => 'drive',
+                'obscure' => 'true',
+                'parameters' => json_encode($json)
+            ],
+        ]);
+        //Guardamos la informacion en la BD
+        $conexion = new Conexiones();
+        $conexion->setNombre($name);
+        $conexion->setTipo('drive');
         $conexion->setUser($this->getUser());
         $conexion->setAlias($alias);
         //Base de datos

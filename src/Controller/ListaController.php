@@ -34,7 +34,7 @@ class ListaController extends AbstractController {
             $separados = $cliente->separar($archivos_asociados);
             $carpetas = $separados['carpeta'];
             $archivos = $separados['archivos'];
-            $lista[$array->getNombre()] = ['carpetas' => $carpetas, 'archivos' => $archivos];
+            $lista[$array->getAlias().'_'.$array->getTipo()] = ['carpetas' => $carpetas, 'archivos' => $archivos];
         }
 
 

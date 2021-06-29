@@ -41,12 +41,8 @@ class CrearConexionController extends AbstractController {
      */
     public function drive(httpClient $client): Response {
 
-        $objeto = new driveToken();
-        $token = $objeto->getToken();
-        $token_final = $objeto->token($token);
-       // var_dump($token_final);
-        
-        return new Response();
+        $client->drive();        
+        return $this->redirectToRoute('lista_conexion');
     }
 
 }
