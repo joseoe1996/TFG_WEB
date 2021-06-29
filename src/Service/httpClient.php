@@ -11,12 +11,10 @@ use App\Service\driveToken;
 const IP = '127.0.0.1';
 const PUERTO = '5572';
 const DIR = IP . ':' . PUERTO;
-
-const CLIENT_ID_ONEDRIVE='088e81a1-5274-44dd-bae8-fe657686b19f';
-const SECRETO_ONEDRIVE='Ag4.cX~HE-x27aLO8W.9a~rZ77e_iqR3H_';
-
-const CLIENTE_ID_DRIVE='673961889608-7bhejsqnglluor9prgrb03e13g3s18mg.apps.googleusercontent.com';
-const SECRETO_DRIVE='tzXjmMQkz1qZ90FNNDtl2XKy';
+const CLIENT_ID_ONEDRIVE = '088e81a1-5274-44dd-bae8-fe657686b19f';
+const SECRETO_ONEDRIVE = 'Ag4.cX~HE-x27aLO8W.9a~rZ77e_iqR3H_';
+const CLIENTE_ID_DRIVE = '673961889608-7bhejsqnglluor9prgrb03e13g3s18mg.apps.googleusercontent.com';
+const SECRETO_DRIVE = 'tzXjmMQkz1qZ90FNNDtl2XKy';
 
 class httpClient extends AbstractController {
 
@@ -107,6 +105,7 @@ class httpClient extends AbstractController {
             throw $e;
         }
     }
+
     //Crear conexion drive
     public function drive() {
 
@@ -142,6 +141,42 @@ class httpClient extends AbstractController {
         $conexion->setTipo('drive');
         $conexion->setUser($this->getUser());
         $conexion->setAlias($alias);
+        //Base de datos
+        $em = $this->getDoctrine()->getManager();
+        try {
+            $em->persist($conexion);
+            $em->flush();
+        } catch (\Exception $e) {
+            $em->rollback();
+            throw $e;
+        }
+    }
+
+    public function sftp(string $IP, string $user, string $pass) {
+
+        $json = array(
+            "host" => $IP
+            , "user" => $user
+            , "pass" => $pass
+            , "port" => 2222
+        );
+        $name = preg_replace('[\.]', '_', $IP);
+        $response = $this->client->request('POST', 'http://' . DIR . '/config/create', [
+            // these values are automatically encoded before including them in the URL
+            'query' => [
+                'name' => $name,
+                'type' => 'sftp',
+                'obscure' => 'true',
+                'parameters' => json_encode($json)
+            ],
+        ]);
+
+        //Guardamos la informacion en la BD
+        $conexion = new Conexiones();
+        $conexion->setNombre($name);
+        $conexion->setTipo('sftp');
+        $conexion->setUser($this->getUser());
+        $conexion->setAlias($user);
         //Base de datos
         $em = $this->getDoctrine()->getManager();
         try {
