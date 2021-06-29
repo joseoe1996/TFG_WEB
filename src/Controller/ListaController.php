@@ -14,27 +14,26 @@ class ListaController extends AbstractController {
      * @Route("/inicio/lista/{conexion}/{ruta}", name="lista_archivos")
      */
     public function index(httpClient $cliente, ConexionesRepository $conerepo, string $ruta = "", string $conexion = ""): Response {
-               
-        $userlog = $this->getUser()->getId();
-      
 
+        $userlog = $this->getUser()->getId();
 
         $final = preg_replace('/_/', '/', $ruta);
         $lista = array();
 
         if (!empty($conexion)) {
-            $criteria = ['nombre' => $conexion];
+            $criteria = ['alias' => $conexion];
             $conexiones_BD = $conerepo->findBy($criteria);
         } else {
             $criteria = ['user' => $userlog];
             $conexiones_BD = $conerepo->findBy($criteria);
         }
         foreach ($conexiones_BD as $array) {
+           // var_dump($array->getAlias());
             $archivos_asociados = $cliente->lista($array->getNombre() . ":", $final);
             $separados = $cliente->separar($archivos_asociados);
             $carpetas = $separados['carpeta'];
             $archivos = $separados['archivos'];
-            $lista[$array->getAlias().'_'.$array->getTipo()] = ['carpetas' => $carpetas, 'archivos' => $archivos];
+            $lista[$array->getAlias()] = ['carpetas' => $carpetas, 'archivos' => $archivos];
         }
 
 
