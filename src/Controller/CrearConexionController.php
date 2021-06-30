@@ -9,6 +9,7 @@ use App\Service\httpClient;
 use App\Repository\ConexionesRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\phpSSDP;
+use App\Service\BD;
 
 class CrearConexionController extends AbstractController {
 
@@ -43,7 +44,9 @@ class CrearConexionController extends AbstractController {
      * @Route("/inicio/crear_onedrive", name="crear_onedrive")
      */
     public function onedrive(httpClient $client): Response {
-        $client->onedrive();
+        $ayuda=$client->onedrive();
+        $BD = new BD($this->getDoctrine()->getManager());
+        $BD->C_conexion($ayuda['nombre'], $this->getUser(), $ayuda['alias'], 'onedrive');
         return $this->redirectToRoute('lista_conexion');
     }
 
@@ -52,7 +55,9 @@ class CrearConexionController extends AbstractController {
      */
     public function drive(httpClient $client): Response {
 
-        $client->drive();
+        $ayuda=$client->drive();
+        $BD = new BD($this->getDoctrine()->getManager());
+        $BD->C_conexion($ayuda['nombre'], $this->getUser(), $ayuda['alias'], 'drive');
         return $this->redirectToRoute('lista_conexion');
     }
 
@@ -65,6 +70,9 @@ class CrearConexionController extends AbstractController {
         $pas = $request->get('password');
         $IP = $request->get('IP');
         $client->sftp($IP, $usuario, $pas);
+        $name = preg_replace('[\.]', '_', $IP);
+        $BD = new BD($this->getDoctrine()->getManager());
+        $BD->C_conexion($name, $this->getUser(), $usuario, 'sftp');
         return $this->redirectToRoute('lista_conexion');
     }
 

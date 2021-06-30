@@ -4,8 +4,6 @@ namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Service\onedriveToken;
-use App\Entity\Conexiones;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\driveToken;
 
 const IP = '127.0.0.1';
@@ -16,7 +14,7 @@ const SECRETO_ONEDRIVE = 'Ag4.cX~HE-x27aLO8W.9a~rZ77e_iqR3H_';
 const CLIENTE_ID_DRIVE = '673961889608-7bhejsqnglluor9prgrb03e13g3s18mg.apps.googleusercontent.com';
 const SECRETO_DRIVE = 'tzXjmMQkz1qZ90FNNDtl2XKy';
 
-class httpClient extends AbstractController {
+class httpClient {
 
     private $client;
 
@@ -24,22 +22,20 @@ class httpClient extends AbstractController {
         $this->client = $client;
     }
 
+    public function POST($param, string $operacion) {
+        $response = $this->client->request('POST', 'http://' . DIR . $operacion, [
+            // these values are automatically encoded before including them in the URL
+            'query' =>
+            $param
+        ]);
+        return $response;
+    }
+
     //Listar todos los archivos de una conexion
     public function lista(string $nombre, string $remote) {
-        $response = $this->client->request('POST', 'http://' . DIR . '/operations/list', [
-            // these values are automatically encoded before including them in the URL
-            'query' => [
-                'fs' => $nombre,
-                'remote' => $remote,
-            ],
-        ]);
-        $statusCode = $response->getStatusCode();
-        // $statusCode = 200
-        $contentType = $response->getHeaders()['content-type'][0];
-        // $contentType = 'application/json'
-        // $content = $response->getContent();
-        // $content = '{"id":521583, "name":"symfony-docs", ...}'
-        $content = $response->toArray();
+        $parametros = ['fs' => $nombre, 'remote' => $remote];
+        $operacion = '/operations/list';
+        $content = $this->POST($parametros, $operacion)->toArray();
         return $content;
     }
 
@@ -80,30 +76,14 @@ class httpClient extends AbstractController {
             , "token" => $token_modificado
         );
         //Creamos la conexion con RCLONE
-        $response = $this->client->request('POST', 'http://' . DIR . '/config/create', [
-            // these values are automatically encoded before including them in the URL
-            'query' => [
-                'name' => $name,
-                'type' => 'onedrive',
-                'obscure' => 'true',
-                'parameters' => json_encode($json)
-            ],
-        ]);
-        //Guardamos esa conexion en la BD
-        $conexion = new Conexiones();
-        $conexion->setNombre($name);
-        $conexion->setTipo('onedrive');
-        $conexion->setUser($this->getUser());
-        $conexion->setAlias($alias);
-        //Base de datos
-        $em = $this->getDoctrine()->getManager();
-        try {
-            $em->persist($conexion);
-            $em->flush();
-        } catch (\Exception $e) {
-            $em->rollback();
-            throw $e;
-        }
+        $operacion = '/config/create';
+        $parametros = ['name' => $name,
+            'type' => 'onedrive',
+            'obscure' => 'true',
+            'parameters' => json_encode($json)];
+        $this->POST($parametros, $operacion);
+        
+        return ['alias' => $alias, 'nombre' => $name];
     }
 
     //Crear conexion drive
@@ -126,30 +106,15 @@ class httpClient extends AbstractController {
             , "token" => $token_final
         );
         //Creamos la conexion con RCLONE
-        $response = $this->client->request('POST', 'http://' . DIR . '/config/create', [
-            // these values are automatically encoded before including them in the URL
-            'query' => [
-                'name' => $name,
-                'type' => 'drive',
-                'obscure' => 'true',
-                'parameters' => json_encode($json)
-            ],
-        ]);
-        //Guardamos la informacion en la BD
-        $conexion = new Conexiones();
-        $conexion->setNombre($name);
-        $conexion->setTipo('drive');
-        $conexion->setUser($this->getUser());
-        $conexion->setAlias($alias);
-        //Base de datos
-        $em = $this->getDoctrine()->getManager();
-        try {
-            $em->persist($conexion);
-            $em->flush();
-        } catch (\Exception $e) {
-            $em->rollback();
-            throw $e;
-        }
+        $operacion = '/config/create';
+        $parametros = [
+            'name' => $name,
+            'type' => 'drive',
+            'obscure' => 'true',
+            'parameters' => json_encode($json)
+        ];
+        $this->POST($parametros, $operacion);
+        return ['alias' => $alias, 'nombre' => $name];
     }
 
     public function sftp(string $IP, string $user, string $pass) {
@@ -161,31 +126,16 @@ class httpClient extends AbstractController {
             , "port" => 2222
         );
         $name = preg_replace('[\.]', '_', $IP);
-        $response = $this->client->request('POST', 'http://' . DIR . '/config/create', [
-            // these values are automatically encoded before including them in the URL
-            'query' => [
-                'name' => $name,
-                'type' => 'sftp',
-                'obscure' => 'true',
-                'parameters' => json_encode($json)
-            ],
-        ]);
 
-        //Guardamos la informacion en la BD
-        $conexion = new Conexiones();
-        $conexion->setNombre($name);
-        $conexion->setTipo('sftp');
-        $conexion->setUser($this->getUser());
-        $conexion->setAlias($user);
-        //Base de datos
-        $em = $this->getDoctrine()->getManager();
-        try {
-            $em->persist($conexion);
-            $em->flush();
-        } catch (\Exception $e) {
-            $em->rollback();
-            throw $e;
-        }
+        $operacion = '/config/create';
+        $parametros = [
+            'name' => $name,
+            'type' => 'sftp',
+            'obscure' => 'true',
+            'parameters' => json_encode($json)
+        ];
+        //Creamos la conexion con RCLONE
+        $this->POST($parametros, $operacion);
     }
 
 }
