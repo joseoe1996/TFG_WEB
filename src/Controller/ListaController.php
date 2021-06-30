@@ -19,27 +19,29 @@ class ListaController extends AbstractController {
 
         $final = preg_replace('/_/', '/', $ruta);
         $lista = array();
+        $alias = array();
 
         if (!empty($conexion)) {
-            $criteria = ['alias' => $conexion];
+            $criteria = ['nombre' => $conexion];
             $conexiones_BD = $conerepo->findBy($criteria);
         } else {
             $criteria = ['user' => $userlog];
             $conexiones_BD = $conerepo->findBy($criteria);
         }
         foreach ($conexiones_BD as $array) {
-           // var_dump($array->getAlias());
+            // var_dump($array->getAlias());
             $archivos_asociados = $cliente->lista($array->getNombre() . ":", $final);
             $separados = $cliente->separar($archivos_asociados);
             $carpetas = $separados['carpeta'];
             $archivos = $separados['archivos'];
-            $lista[$array->getAlias()] = ['carpetas' => $carpetas, 'archivos' => $archivos];
+            $lista[$array->getNombre()] = ['carpetas' => $carpetas, 'archivos' => $archivos];
+            $alias[$array->getNombre()] = $array->getAlias();
         }
-
 
         return $this->render('lista/index.html.twig', [
                     'controller_name' => 'ListaController',
-                    'lista' => $lista
+                    'lista' => $lista,
+                    'alias' => $alias
         ]);
 
         // return new Response();
