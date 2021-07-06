@@ -41,28 +41,28 @@ class CrearConexionController extends AbstractController {
     }
 
     /**
-     * @Route("/inicio/crear_onedrive", name="crear_onedrive")
+     * @Route("/inicio/lista_conexion/crear_onedrive", name="crear_onedrive")
      */
     public function onedrive(httpClient $client): Response {
-        $ayuda=$client->onedrive();
+        $ayuda = $client->onedrive();
         $BD = new BD($this->getDoctrine()->getManager());
         $BD->C_conexion($ayuda['nombre'], $this->getUser(), $ayuda['alias'], 'onedrive');
         return $this->redirectToRoute('lista_conexion');
     }
 
     /**
-     * @Route("/inicio/crear_drive", name="crear_drive")
+     * @Route("/inicio/lista_conexion/crear_drive", name="crear_drive")
      */
     public function drive(httpClient $client): Response {
 
-        $ayuda=$client->drive();
+        $ayuda = $client->drive();
         $BD = new BD($this->getDoctrine()->getManager());
         $BD->C_conexion($ayuda['nombre'], $this->getUser(), $ayuda['alias'], 'drive');
         return $this->redirectToRoute('lista_conexion');
     }
 
     /**
-     * @Route("/inicio/crear_sftp", name="crear_sftp")
+     * @Route("/inicio/lista_conexion/crear_sftp", name="crear_sftp")
      */
     public function sftp(httpClient $client, Request $request): Response {
 
@@ -73,6 +73,19 @@ class CrearConexionController extends AbstractController {
         $name = preg_replace('[\.]', '_', $IP);
         $BD = new BD($this->getDoctrine()->getManager());
         $BD->C_conexion($name, $this->getUser(), $usuario, 'sftp');
+        return $this->redirectToRoute('lista_conexion');
+    }
+
+    /**
+     * @Route("/inicio/lista_conexion/borrar_conexion/{conexion}", name="borrar_conexion")
+     */
+    public function borrarConexion(httpClient $client, string $conexion, ConexionesRepository $con) {
+
+        $criteria = ['nombre' => $conexion];
+        $conexiones = $con->findBy($criteria);
+        $client->borrarConexion($conexion);
+        $BD = new BD($this->getDoctrine()->getManager());
+        $BD->B_conexion($conexiones[0]);
         return $this->redirectToRoute('lista_conexion');
     }
 

@@ -12,6 +12,7 @@ class BD {
         $this->em = $em;
     }
 
+    //Crear entrada de tipo conexion en la base de datos
     public function C_conexion(string $name, $user, string $alias, string $tipo) {
 
         $conexion = new Conexiones();
@@ -22,6 +23,17 @@ class BD {
         //Base de datos
         try {
             $this->em->persist($conexion);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
+    }
+    
+    public function B_conexion(Conexiones $conexion) {
+        
+        try {
+            $this->em->remove($conexion);
             $this->em->flush();
         } catch (\Exception $e) {
             $this->em->rollback();

@@ -150,4 +150,10 @@ class httpClient {
         $parametros = ['fs' => $conexion . ':', 'remote' => $ruta];
         $this->POST($parametros, $operacion);
     }
+    
+    public function borrarConexion(string $conexion) {
+        $operacion = '/config/delete';
+        $parametros = ['name' => $conexion];
+        $this->POST($parametros, $operacion);
+    }
 }
