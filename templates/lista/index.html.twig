@@ -16,18 +16,28 @@
                 <thead>
                     <tr>
                         <th scope="col">Carpetas</th>
+                        <th scope="col">Borrar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td> {% for tipo, carpetas in asociados %}
+                     {% for tipo, carpetas in asociados %}
                             {% if tipo=='carpetas' %}
                                 {% for nombre_carpeta, path in carpetas %}
-                                    <div class="form-group"><a href="{{path('lista_archivos',{ruta: path, conexion: name})}}" class="btn" type="submit" >{{nombre_carpeta}}</a></div>
-                                {% endfor %} </td>
+                                    <tr>
+                                        <td>
+                                    <div class="form-group">
+                                        <a href="{{path('lista_archivos',{ruta: path, conexion: name})}}" class="btn" type="submit" >
+                                            {{nombre_carpeta}}</a>
+                                    </div>
+                                        </td>
+                                        <td>
+                       <a href="{{path('borrar_carpeta',{ruta: path, conexion: name})}}" class="btn btn-primary" type="submit" >Borrar</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %} 
                             {% endif %}
                         {% endfor %}
-                </tr>
+               
             </tbody>
         </table>
 
@@ -35,20 +45,28 @@
             <thead>
                 <tr>
                     <th scope="col">Archivos</th>
+                    <th scope="col">Borrar</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td> {% for tipo, archivos in asociados %}
-                        {% if tipo == 'archivos' %}
-                            {% for nombre_archivos, path in archivos %}
-                    <li>{{ nombre_archivos }}</li>
-                {% endfor %} </td
+                {% for tipo, archivos in asociados %}
+                    {% if tipo == 'archivos' %}
+                        {% for nombre_archivos, path in archivos %}
+                            <tr>
+                                <td
+                    <li>
+                        {{ nombre_archivos }}
+                    </li>
+                    </td>
+                    <td>
+                        <a href="{{path('borrar_archivo',{ruta: path, conexion: name})}}" class="btn btn-primary" type="submit" >Borrar</a>
+                    </td>
+                    </tr>
+                {% endfor %} 
             {% endif %}
-            {% endfor %}
-                </tr>
-                </tbody>
-            </table>
-            {% endfor %}
-            </div>
-            {% endblock %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+    </div>
+    {% endblock %}

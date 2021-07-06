@@ -30,7 +30,7 @@ class ListaController extends AbstractController {
         }
         foreach ($conexiones_BD as $array) {
             // var_dump($array->getAlias());
-            $archivos_asociados = $cliente->lista($array->getNombre() . ":", $final);
+            $archivos_asociados = $cliente->lista($array->getNombre(), $final);
             $separados = $cliente->separar($archivos_asociados);
             $carpetas = $separados['carpeta'];
             $archivos = $separados['archivos'];
@@ -43,8 +43,26 @@ class ListaController extends AbstractController {
                     'lista' => $lista,
                     'alias' => $alias
         ]);
+    }
 
-        // return new Response();
+    /**
+     * @Route("/inicio/lista_borrar_archivo/{conexion}/{ruta}", name="borrar_archivo")
+     */
+    public function borrarARCH(httpClient $client, string $ruta = "", string $conexion = "") {
+
+        $ruta2 = preg_replace('/_/', '/', $ruta);
+        $client->borrarARCH($conexion, $ruta2);
+        return $this->redirectToRoute('lista_archivos');
+    }
+
+    /**
+     * @Route("/inicio/lista_borrar_carpeta/{conexion}/{ruta}", name="borrar_carpeta")
+     */
+    public function borrarCARP(httpClient $client, string $ruta = "", string $conexion = "") {
+
+        $ruta2 = preg_replace('/_/', '/', $ruta);
+        $client->borrarCARP($conexion, $ruta2);
+        return $this->redirectToRoute('lista_archivos');
     }
 
 }

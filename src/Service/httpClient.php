@@ -33,7 +33,7 @@ class httpClient {
 
     //Listar todos los archivos de una conexion
     public function lista(string $nombre, string $remote) {
-        $parametros = ['fs' => $nombre, 'remote' => $remote];
+        $parametros = ['fs' => $nombre . ':', 'remote' => $remote];
         $operacion = '/operations/list';
         $content = $this->POST($parametros, $operacion)->toArray();
         return $content;
@@ -48,7 +48,7 @@ class httpClient {
                 if ($value['IsDir'] == 1) {
                     $carpeta[$value['Name']] = preg_replace('~/~', '_', $value['Path']);
                 } else {
-                    $archivos[$value['Name']] = $value['Path'];
+                    $archivos[$value['Name']] = preg_replace('~/~', '_', $value['Path']);
                 }
             }
         }
@@ -82,7 +82,7 @@ class httpClient {
             'obscure' => 'true',
             'parameters' => json_encode($json)];
         $this->POST($parametros, $operacion);
-        
+
         return ['alias' => $alias, 'nombre' => $name];
     }
 
@@ -114,6 +114,7 @@ class httpClient {
             'parameters' => json_encode($json)
         ];
         $this->POST($parametros, $operacion);
+
         return ['alias' => $alias, 'nombre' => $name];
     }
 
@@ -138,4 +139,15 @@ class httpClient {
         $this->POST($parametros, $operacion);
     }
 
+    public function borrarARCH(string $conexion, string $ruta) {
+        $operacion = '/operations/deletefile';
+        $parametros = ['fs' => $conexion . ':', 'remote' => $ruta];
+        $this->POST($parametros, $operacion);
+    }
+
+     public function borrarCARP(string $conexion, string $ruta) {
+        $operacion = '/operations/purge';
+        $parametros = ['fs' => $conexion . ':', 'remote' => $ruta];
+        $this->POST($parametros, $operacion);
+    }
 }
