@@ -4,7 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    directorio_ficheros: '%kernel.project_dir%/public/uploads/'
+    
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -20,6 +21,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
-
+            
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%directorio_ficheros%'
+            
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
