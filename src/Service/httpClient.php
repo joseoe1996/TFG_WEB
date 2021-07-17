@@ -157,9 +157,16 @@ class httpClient {
         $this->POST($parametros, $operacion);
     }
 
-    public function copiar_subir($origen, $conexion, $nombre_final) {
+    public function copiar_subir($origen, $destino, $nombre_final) {
         $operacion = '/operations/copyfile';
-        $parametros = ['srcFs' => "C:/", 'srcRemote' => $origen, 'dstFs' => $conexion . ":", 'dstRemote' => $nombre_final];
+        $parametros = ['srcFs' => "C:/", 'srcRemote' => $origen, 'dstFs' => $destino, 'dstRemote' => $nombre_final];
+        $reponse=$this->POST($parametros, $operacion);
+        return $reponse;
+    }
+    
+    public function copiar_bajar($origen, $destino, $nombre_final) {
+        $operacion = '/operations/copyfile';
+        $parametros = ['srcFs' => $origen, 'srcRemote' => $nombre_final, 'dstFs' => "C:/", 'dstRemote' => $destino];
         $reponse=$this->POST($parametros, $operacion);
         return $reponse;
     }

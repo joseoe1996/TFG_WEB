@@ -45,6 +45,7 @@
             <thead>
                 <tr>
                     <th scope="col">Archivos</th>
+                    <th scope="col">Descargar</th>
                     <th scope="col">Borrar</th>
                 </tr>
             </thead>
@@ -57,6 +58,9 @@
                     <li>
                         {{ nombre_archivos }}
                     </li>
+                    </td>
+                    <td>
+                    <a href="{{path('bajar',{nombreFichero: path, conexion: name})}}" class="btn btn-primary" type="submit" >Descargar</a>
                     </td>
                     <td>
                         <a href="{{path('borrar_archivo',{ruta: path, conexion: name})}}" class="btn btn-primary" type="submit" >Borrar</a>
