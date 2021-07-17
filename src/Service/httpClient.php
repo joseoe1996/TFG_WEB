@@ -145,15 +145,23 @@ class httpClient {
         $this->POST($parametros, $operacion);
     }
 
-     public function borrarCARP(string $conexion, string $ruta) {
+    public function borrarCARP(string $conexion, string $ruta) {
         $operacion = '/operations/purge';
         $parametros = ['fs' => $conexion . ':', 'remote' => $ruta];
         $this->POST($parametros, $operacion);
     }
-    
+
     public function borrarConexion(string $conexion) {
         $operacion = '/config/delete';
         $parametros = ['name' => $conexion];
         $this->POST($parametros, $operacion);
     }
+
+    public function copiar_subir($origen, $conexion, $nombre_final) {
+        $operacion = '/operations/copyfile';
+        $parametros = ['srcFs' => "C:/", 'srcRemote' => $origen, 'dstFs' => $conexion . ":", 'dstRemote' => $nombre_final];
+        $reponse=$this->POST($parametros, $operacion);
+        return $reponse;
+    }
+
 }
