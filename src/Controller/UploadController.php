@@ -44,17 +44,21 @@ class UploadController extends AbstractController {
     }
 
     /**
-     * @Route("/inicio/bajar/{conexion}/{nombreFichero}", name="bajar")
+     * @Route("/inicio/bajar/{conexion}/{ruta}", name="bajar", requirements={"ruta"=".+"})
      */
-    public function bajar(FileUploader $uploader, httpClient $client, $nombreFichero, $conexion) {
+    public function bajar(FileUploader $uploader, httpClient $client, $ruta, $conexion) {
 
-        $file = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
-        $client->copiar_bajar($conexion . ':', $file, $nombreFichero);
-        $file = $uploader->getTargetDirectory() . $nombreFichero;
-        $response = new BinaryFileResponse($file);
+        $archivo = preg_split("[/]", $ruta);
+        $nombreArchivo= array_pop($archivo);
+        $file = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreArchivo;
+        $client->copiar_bajar($conexion . ':', $file, $ruta);
+       
+        $destino = $uploader->getTargetDirectory() . $nombreArchivo;
+
+        $response = new BinaryFileResponse($destino);
 
         $disposition = HeaderUtils::makeDisposition(
-                        HeaderUtils::DISPOSITION_ATTACHMENT, $nombreFichero
+                        HeaderUtils::DISPOSITION_ATTACHMENT, $nombreArchivo
         );
 
         $response->headers->set('Content-Disposition', $disposition);

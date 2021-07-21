@@ -46,9 +46,9 @@ class httpClient {
         foreach ($lista as $arch) {
             foreach ($arch as $value) {
                 if ($value['IsDir'] == 1) {
-                    $carpeta[$value['Name']] = preg_replace('~/~', '_', $value['Path']);
+                    $carpeta[$value['Name']] = $value['Path']; //preg_replace('~/~', '_', $value['Path']);
                 } else {
-                    $archivos[$value['Name']] = preg_replace('~/~', '_', $value['Path']);
+                    $archivos[$value['Name']] = $value['Path']; //preg_replace('~/~', '_', $value['Path']);
                 }
             }
         }

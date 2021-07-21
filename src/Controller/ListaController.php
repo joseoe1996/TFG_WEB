@@ -11,13 +11,14 @@ use App\Repository\ConexionesRepository;
 class ListaController extends AbstractController {
 
     /**
-     * @Route("/inicio/lista/{conexion}/{ruta}", name="lista_archivos")
+     * @Route("/inicio/lista/{conexion}/{ruta}", name="lista_archivos", requirements={"ruta"=".+"})
      */
     public function index(httpClient $cliente, ConexionesRepository $conerepo, string $ruta = "", string $conexion = ""): Response {
 
         $userlog = $this->getUser()->getId();
 
-        $final = preg_replace('/_/', '/', $ruta);
+       // $final = preg_replace('/_/', '/', $ruta); 
+        $final=$ruta;
         $lista = array();
         $alias = array();
 
@@ -29,7 +30,6 @@ class ListaController extends AbstractController {
             $conexiones_BD = $conerepo->findBy($criteria);
         }
         foreach ($conexiones_BD as $array) {
-            // var_dump($array->getAlias());
             $archivos_asociados = $cliente->lista($array->getNombre(), $final);
             $separados = $cliente->separar($archivos_asociados);
             $carpetas = $separados['carpeta'];
@@ -46,22 +46,22 @@ class ListaController extends AbstractController {
     }
 
     /**
-     * @Route("/inicio/lista_borrar_archivo/{conexion}/{ruta}", name="borrar_archivo")
+     * @Route("/inicio/lista_borrar_archivo/{conexion}/{ruta}", name="borrar_archivo", requirements={"ruta"=".+"})
      */
     public function borrarARCH(httpClient $client, string $ruta = "", string $conexion = "") {
 
-        $ruta2 = preg_replace('/_/', '/', $ruta);
-        $client->borrarARCH($conexion, $ruta2);
+       // $ruta2 = preg_replace('/_/', '/', $ruta);
+        $client->borrarARCH($conexion, $ruta);
         return $this->redirectToRoute('lista_archivos');
     }
 
     /**
-     * @Route("/inicio/lista_borrar_carpeta/{conexion}/{ruta}", name="borrar_carpeta")
+     * @Route("/inicio/lista_borrar_carpeta/{conexion}/{ruta}", name="borrar_carpeta", requirements={"ruta"=".+"})
      */
     public function borrarCARP(httpClient $client, string $ruta = "", string $conexion = "") {
 
-        $ruta2 = preg_replace('/_/', '/', $ruta);
-        $client->borrarCARP($conexion, $ruta2);
+       // $ruta2 = preg_replace('/_/', '/', $ruta);
+        $client->borrarCARP($conexion, $ruta);
         return $this->redirectToRoute('lista_archivos');
     }
 
