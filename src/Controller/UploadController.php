@@ -58,18 +58,8 @@ class UploadController extends AbstractController {
         );
 
         $response->headers->set('Content-Disposition', $disposition);
+        $response->deleteFileAfterSend(true);
         return $response;
-    }
-
-    /**
-     * @Route("/inicio/borrar_bajar", name="borrar_bajar")
-     */
-    public function borrar_bajar($uploader, $nombreFichero) {
-
-        $filesystem = new Filesystem();
-        $filesystem->remove($uploader->getTargetDirectory() . $nombreFichero);
-
-        return $this->redirectToRoute('lista_archivos');
     }
 
 }
