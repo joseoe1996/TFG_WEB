@@ -40,6 +40,7 @@
 
         <!-- Mostramos los dispositivos disponibles a traves de la busqueda de servicios y permitimos la introduccion de las 
         credenciales de acceso-->
+        <h1>Dispositivos encontrados</h1>
         {% for key, value in sftp %}
             <form method="post" class="row g-3" action="{{path('crear_sftp')}}" >
                 <h3>IP:{{value.IP}}</h3>

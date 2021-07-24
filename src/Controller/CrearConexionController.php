@@ -25,7 +25,7 @@ class CrearConexionController extends AbstractController {
         $conexiones = $con->findBy($criteria);
         //Listar conexiones SFTP disponibles
         //$disponibles = phpSSDP::getDevicesByURN('urn:schemas-upnp-org:service:ContentDirectory:1');
-        $movil = ['IP' => '192.168.0.103', 'UUID' => '6e346cda-383a-49de-8e55-716660c865b6',
+        $movil = ['IP' => '192.168.0.102', 'UUID' => '6e346cda-383a-49de-8e55-716660c865b6',
             'DESCRIPTION' => ['friendlyName' => 'Jose Movil']];
         $ordenador = ['IP' => '192.168.0.107', 'UUID' => '4d696e69-444c-164e-9d41-000c29d538cc',
             'DESCRIPTION' => ['friendlyName' => 'ubuntu 2014: mini dlna']];
