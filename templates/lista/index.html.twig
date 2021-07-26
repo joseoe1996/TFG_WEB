@@ -27,10 +27,17 @@
                                     {%endif%}
                                     <td>
                                         <div class="form-group">
-                                            <a href="{{path('lista_archivos',{ruta: path, conexion: name})}}" class="btn" type="submit" >
-                                                {{nombre_carpeta}}</a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    {{nombre_carpeta}}
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                    <li><a class="dropdown-item" href="{{path('lista_archivos',{ruta: path, conexion: name})}}">Acceso</a></li>
+                                                    <li><a class="dropdown-item" href="{{path('borrar_carpeta',{ruta: path, conexion: name})}}">Borrar</a></li>                                            
+                                                </ul>
+                                            </div>
                                         </div>
-                                        
+
                                     </td>
                                     {% if loop.index % numColum == 0%}
                                     </tr>
@@ -46,33 +53,35 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Archivos</th>
-                        <th scope="col">Descargar</th>
-                        <th scope="col">Borrar</th>
+                        <th scope="col">Archivos</th>                      
                     </tr>
                 </thead>
                 <tbody>
                     {% for tipo, archivos in asociados %}
                         {% if tipo == 'archivos' %}
                             {% for nombre_archivos, path in archivos %}
-                                <tr>
-                                    <td
-                        <li>
-                            {{ nombre_archivos }}
-                        </li>
-                        </td>
-                        <td>
-                            <a href="{{path('bajar',{ruta: path, conexion: name})}}" class="btn btn-primary" type="submit" >Descargar</a>
-                        </td>
-                        <td>
-                            <a href="{{path('borrar_archivo',{ruta: path, conexion: name})}}" class="btn btn-primary" type="submit" >Borrar</a>
-                        </td>
-                        </tr>
-                    {% endfor %} 
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
-</div>
+                                {% if loop.index0 % numColum == 0%}
+                                    <tr>
+                                    {%endif%}
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{nombre_archivos}}
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="{{path('bajar',{ruta: path, conexion: name})}}">Descargar</a></li>
+                                                <li><a class="dropdown-item" href="{{path('borrar_archivo',{ruta: path, conexion: name})}}">Borrar</a></li>                                            
+                                            </ul>
+                                        </div>
+                                    </td>                          
+                                    {% if loop.index % numColum == 0%}
+                                    </tr>
+                                {%endif%}
+                            {% endfor %} 
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    </div>
 {% endblock %}
