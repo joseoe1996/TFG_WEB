@@ -7,18 +7,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\httpClient;
 use App\Repository\ConexionesRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 class ListaController extends AbstractController {
 
     /**
      * @Route("/inicio/lista/{conexion}/{ruta}", name="lista_archivos", requirements={"ruta"=".+"})
      */
-    public function index(httpClient $cliente, ConexionesRepository $conerepo, string $ruta = "", string $conexion = ""): Response {
+    public function index(httpClient $cliente, ConexionesRepository $conerepo, Request $request, string $ruta = "", string $conexion = ""): Response {
 
         $userlog = $this->getUser()->getId();
+        $busqueda = $request->get('busqueda');
 
-       // $final = preg_replace('/_/', '/', $ruta); 
-        $final=$ruta;
+        $final = $ruta;
         $lista = array();
         $alias = array();
 
@@ -38,6 +39,16 @@ class ListaController extends AbstractController {
             $alias[$array->getNombre()] = $array->getAlias();
         }
 
+        if (!empty($busqueda)) {
+            $lista2 = $cliente->busqueda($busqueda, $lista);
+            $lista = $lista2;
+            if (empty($lista)) {
+                return $this->render('noEncontrado.html.twig', [
+                            'titulo' => 'Elemento no encontrado',
+                ]);
+            }
+        }
+
         return $this->render('lista/index.html.twig', [
                     'controller_name' => 'ListaController',
                     'lista' => $lista,
@@ -50,7 +61,7 @@ class ListaController extends AbstractController {
      */
     public function borrarARCH(httpClient $client, string $ruta = "", string $conexion = "") {
 
-       // $ruta2 = preg_replace('/_/', '/', $ruta);
+        // $ruta2 = preg_replace('/_/', '/', $ruta);
         $client->borrarARCH($conexion, $ruta);
         return $this->redirectToRoute('lista_archivos');
     }
@@ -60,7 +71,7 @@ class ListaController extends AbstractController {
      */
     public function borrarCARP(httpClient $client, string $ruta = "", string $conexion = "") {
 
-       // $ruta2 = preg_replace('/_/', '/', $ruta);
+        // $ruta2 = preg_replace('/_/', '/', $ruta);
         $client->borrarCARP($conexion, $ruta);
         return $this->redirectToRoute('lista_archivos');
     }
