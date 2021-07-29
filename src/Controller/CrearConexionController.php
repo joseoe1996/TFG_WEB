@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\phpSSDP;
 use App\Service\BD;
 
+const SERVER_MOVIL = "CyverLinkJava";
+const SERVER_ORDE = "DLNADOC";
+
 class CrearConexionController extends AbstractController {
 
     /**
@@ -25,9 +28,9 @@ class CrearConexionController extends AbstractController {
         $conexiones = $con->findBy($criteria);
         //Listar conexiones SFTP disponibles
         //$disponibles = phpSSDP::getDevicesByURN('urn:schemas-upnp-org:service:ContentDirectory:1');
-        $movil = ['IP' => '192.168.0.101', 'UUID' => '6e346cda-383a-49de-8e55-716660c865b6',
+        $movil = ['IP' => '192.168.0.101', 'UUID' => '6e346cda-383a-49de-8e55-716660c865b6', 'SERVER' => 'CyverLinkJava',
             'DESCRIPTION' => ['friendlyName' => 'Jose Movil']];
-        $ordenador = ['IP' => '192.168.0.107', 'UUID' => '4d696e69-444c-164e-9d41-000c29d538cc',
+        $ordenador = ['IP' => '192.168.0.107', 'UUID' => '4d696e69-444c-164e-9d41-000c29d538cc', 'SERVER' => 'DLNADOC',
             'DESCRIPTION' => ['friendlyName' => 'ubuntu 2014: mini dlna']];
         $disponibles = [$movil, $ordenador];
         //Comporar con las que ya esten en la BD
@@ -69,10 +72,15 @@ class CrearConexionController extends AbstractController {
         $usuario = $request->get('user');
         $pas = $request->get('password');
         $IP = $request->get('IP');
+        $tipo = 'sftp_movil';
+        $server = $request->get('SERVER');
+        if (preg_match('*' . strtolower($server) . '*', strtolower(SERVER_ORDE))) {
+            $tipo = 'sftp_orde';
+        }
         $client->sftp($IP, $usuario, $pas);
         $name = preg_replace('[\.]', '_', $IP);
         $BD = new BD($this->getDoctrine()->getManager());
-        $BD->C_conexion($name, $this->getUser(), $usuario, 'sftp');
+        $BD->C_conexion($name, $this->getUser(), $usuario, $tipo);
         return $this->redirectToRoute('lista_conexion');
     }
 
