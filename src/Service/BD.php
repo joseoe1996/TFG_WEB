@@ -31,9 +31,20 @@ class BD {
     }
     
     public function B_conexion(Conexiones $conexion) {
-        
         try {
             $this->em->remove($conexion);
+            $this->em->flush();
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
+    }
+    
+    public function E_conexion(Conexiones $conexion, string $alias){
+        
+        $conexion->setAlias($alias);
+        try {
+            $this->em->persist($conexion);
             $this->em->flush();
         } catch (\Exception $e) {
             $this->em->rollback();

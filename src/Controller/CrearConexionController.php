@@ -97,4 +97,18 @@ class CrearConexionController extends AbstractController {
         return $this->redirectToRoute('lista_conexion');
     }
 
+    /**
+     * @Route("/inicio/lista_conexion/editar_alias", name="editar_alias")
+     */
+    public function editarAlias(Request $request, ConexionesRepository $con) {
+
+        $alias = $request->get('user');
+        $nombre = $request->get('nombre');
+        $criteria = ['nombre' => $nombre];
+        $conexion = $con->findBy($criteria);
+        $BD = new BD($this->getDoctrine()->getManager());
+        $BD->E_conexion($conexion[0], $alias);
+        return $this->redirectToRoute('lista_conexion');
+    }
+
 }

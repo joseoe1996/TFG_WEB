@@ -16,6 +16,7 @@
                     <th scope="col">Conexion</th>
                     <th scope="col">Tipo</th>
                     <th scope="col">Borrar</th>
+                    <th scope="col">Editar Alias</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +31,17 @@
                 <td>
                     <a href="{{path('borrar_conexion',{conexion: con.nombre})}}" class="btn btn-primary" type="submit" >
                         Borrar</a>
+                </td>
+                <td>
+                    <form method="post" class="row g-3" action="{{path('editar_alias', {nombre: con.nombre})}}" >
+                        <div class="col-auto">
+                            <label for="user" class="visually-hidden">Nombre</label>
+                            <input type="text" name="user">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary mb-3">Editar</button>
+                        </div>
+                    </form>
                 </td>
                 </tr>
             {% endfor %}
@@ -48,7 +60,7 @@
                 <div class="col-auto">
                     <label for="user" class="visually-hidden">Usuario</label>
                     <input type="hidden" name="IP" value="{{value.IP}}">
-                     <input type="hidden" name="SERVER" value="{{value.SERVER}}">
+                    <input type="hidden" name="SERVER" value="{{value.SERVER}}">
                     <input type="text" name="user">
                 </div>
                 <div class="col-auto">
