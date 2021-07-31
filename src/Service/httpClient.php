@@ -177,7 +177,7 @@ class httpClient {
         foreach ($lista as $conexion => $value) {
             foreach ($value as $tipo => $archivo) {
                 foreach ($archivo as $nombre => $path) {
-                    if (!preg_match('*' . strtolower($buscar) . '*', strtolower($nombre))){
+                    if (!preg_match('*' . strtolower($buscar) . '*', strtolower($nombre))) {
                         unset($lista[$conexion][$tipo][$nombre]);
                     }
                 }
@@ -187,6 +187,20 @@ class httpClient {
             }
         }
         return $lista;
+    }
+
+    public function about(string $conexion) {
+        $operacion = '/operations/about';
+        $parametros = ['fs' => $conexion . ':'];
+        $reponse = $this->POST($parametros, $operacion);
+        return $reponse->toArray();
+    }
+    
+    public function info_remote(string $conexion) {
+        $operacion = '/operations/fsinfo';
+        $parametros = ['fs' => $conexion . ':'];
+        $reponse = $this->POST($parametros, $operacion);
+        return $reponse->toArray();
     }
 
 }

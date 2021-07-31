@@ -23,7 +23,8 @@
                 {% for con in conexiones %}
                     <tr>
                         <td>
-                <li>{{ con.alias }}</li>
+               <a href="{{path('estadisticas_conexion',{conexion: con.nombre})}}" class="btn btn-ligth" type="submit" >
+                        {{con.alias}}</a>
                 </td>
                 <td>
                     {{con.tipo}}
