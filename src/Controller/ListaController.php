@@ -31,9 +31,7 @@ class ListaController extends AbstractController {
             $conexiones_BD = $conerepo->findBy($criteria);
         }
         foreach ($conexiones_BD as $array) {
-            if($array->getTipo()=='sftp_movil' && empty($conexion)){
-                $final='storage/emulated/0';
-            }
+            
             $archivos_asociados = $cliente->lista($array->getNombre(), $final);
             $separados = $cliente->separar($archivos_asociados);
             $carpetas = $separados['carpeta'];

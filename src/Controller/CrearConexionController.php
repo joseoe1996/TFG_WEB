@@ -28,7 +28,7 @@ class CrearConexionController extends AbstractController {
         $conexiones = $con->findBy($criteria);
         //Listar conexiones SFTP disponibles
         //$disponibles = phpSSDP::getDevicesByURN('urn:schemas-upnp-org:service:ContentDirectory:1');
-        $movil = ['IP' => '192.168.0.101', 'UUID' => '6e346cda-383a-49de-8e55-716660c865b6', 'SERVER' => 'CyverLinkJava',
+        $movil = ['IP' => '192.168.0.100', 'UUID' => '6e346cda-383a-49de-8e55-716660c865b6', 'SERVER' => 'CyverLinkJava',
             'DESCRIPTION' => ['friendlyName' => 'Jose Movil']];
         $ordenador = ['IP' => '192.168.0.107', 'UUID' => '4d696e69-444c-164e-9d41-000c29d538cc', 'SERVER' => 'DLNADOC',
             'DESCRIPTION' => ['friendlyName' => 'ubuntu 2014: mini dlna']];
@@ -72,13 +72,19 @@ class CrearConexionController extends AbstractController {
         $usuario = $request->get('user');
         $pas = $request->get('password');
         $IP = $request->get('IP');
-        $tipo = 'sftp_movil';
         $server = $request->get('SERVER');
+
         if (preg_match('*' . strtolower($server) . '*', strtolower(SERVER_ORDE))) {
             $tipo = 'sftp_orde';
+            $name = preg_replace('[\.]', '_', $IP);
+        } else {
+            $tipo = 'sftp_movil';
+            $name = preg_replace('[\.]', '_', $IP);
+            $client->alias($name . '_alias', $name . ':/storage/emulated/0');
+            $name .= '_alias';
         }
+
         $client->sftp($IP, $usuario, $pas);
-        $name = preg_replace('[\.]', '_', $IP);
         $BD = new BD($this->getDoctrine()->getManager());
         $BD->C_conexion($name, $this->getUser(), $usuario, $tipo);
         return $this->redirectToRoute('lista_conexion');
@@ -91,6 +97,11 @@ class CrearConexionController extends AbstractController {
 
         $criteria = ['nombre' => $conexion];
         $conexiones = $con->findBy($criteria);
+        //Borro el alias
+        if (preg_match('*' . '_alias' . '*', $conexion)) {
+            $client->borrarConexion(str_replace('_alias', "", $conexion));
+        }
+        //Borro la conexion
         $client->borrarConexion($conexion);
         $BD = new BD($this->getDoctrine()->getManager());
         $BD->B_conexion($conexiones[0]);

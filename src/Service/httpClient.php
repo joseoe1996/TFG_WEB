@@ -195,12 +195,26 @@ class httpClient {
         $reponse = $this->POST($parametros, $operacion);
         return $reponse->toArray();
     }
-    
+
     public function info_remote(string $conexion) {
         $operacion = '/operations/fsinfo';
         $parametros = ['fs' => $conexion . ':'];
         $reponse = $this->POST($parametros, $operacion);
         return $reponse->toArray();
+    }
+
+    public function alias(string $nombre, string $alias) {
+        $operacion = '/config/create';
+        $json = array(
+            "remote" => $alias
+        );
+        $parametros = [
+            'name' => $nombre,
+            'type' => 'alias',
+            'parameters' => json_encode($json)
+        ];
+        //Creamos la conexion con RCLONE
+        $this->POST($parametros, $operacion);
     }
 
 }
