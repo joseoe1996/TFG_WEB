@@ -11,6 +11,8 @@ use App\Service\httpClient;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Repository\ConexionesRepository;
+use App\Service\politicas;
 
 class UploadController extends AbstractController {
 
@@ -26,12 +28,21 @@ class UploadController extends AbstractController {
     /**
      * @Route("/inicio/subir", name="subir")
      */
-    public function subir(Request $request, FileUploader $uploader, httpClient $client) {
+    public function subir(Request $request, FileUploader $uploader, httpClient $client, ConexionesRepository $con, politicas $politica) {
 
         $archivo = $request->files->get('formFile');
         $nombreFichero = $uploader->upload($archivo);
         $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
-        $destino = '113485777647440128669_drive:';
+
+        $userlog = $this->getUser()->getId();
+        //Lista de conexiones del susario actual
+        $criteria = ['user' => $userlog];
+        $conexiones = $con->findBy($criteria);
+       // $politica=new politicas($client);
+        $destino=$politica->politicaDefecto($conexiones);
+        var_dump($destino);
+        return new Response();
+
         $response = $client->copiar_subir($origen, $destino, $nombreFichero);
 
         if ($response->getStatusCode() == 200) {
@@ -49,10 +60,10 @@ class UploadController extends AbstractController {
     public function bajar(FileUploader $uploader, httpClient $client, $ruta, $conexion) {
 
         $archivo = preg_split("[/]", $ruta);
-        $nombreArchivo= array_pop($archivo);
+        $nombreArchivo = array_pop($archivo);
         $file = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreArchivo;
         $client->copiar_bajar($conexion . ':', $file, $ruta);
-       
+
         $destino = $uploader->getTargetDirectory() . $nombreArchivo;
 
         $response = new BinaryFileResponse($destino);
