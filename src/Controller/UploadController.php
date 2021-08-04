@@ -31,15 +31,15 @@ class UploadController extends AbstractController {
     public function subir(Request $request, FileUploader $uploader, httpClient $client, ConexionesRepository $con, politicas $politica) {
 
         $archivo = $request->files->get('formFile');
-        $nombreFichero = $uploader->upload($archivo);
-        $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
+        // $nombreFichero = $uploader->upload($archivo);
+        // $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
 
         $userlog = $this->getUser()->getId();
         //Lista de conexiones del susario actual
         $criteria = ['user' => $userlog];
         $conexiones = $con->findBy($criteria);
-       // $politica=new politicas($client);
-        $destino=$politica->politicaDefecto($conexiones);
+        // $politica=new politicas($client);
+        $destino = $uploader->tamaño($archivo,25);
         var_dump($destino);
         return new Response();
 

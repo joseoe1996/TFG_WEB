@@ -30,5 +30,19 @@ class politicas {
         }
         return $eleccion;
     }
+    
+    public function menorNumeroArch($conexiones) {
+
+        $min= $this->client->size($conexiones[0]->getNombre());
+        $eleccion = "";
+        foreach ($conexiones as $conexion) {
+            $actual = $this->client->size($conexion->getNombre());
+            if ($actual < $min) {
+                $min = $actual;
+                $eleccion = $conexion->getNombre();
+            }
+        }
+        return $eleccion;
+    }
 
 }

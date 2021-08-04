@@ -216,5 +216,12 @@ class httpClient {
         //Creamos la conexion con RCLONE
         $this->POST($parametros, $operacion);
     }
+    
+    public function size(string $conexion) {
+        $operacion = '/operations/size';
+        $parametros = ['fs' => $conexion . ':'];
+        $reponse = $this->POST($parametros, $operacion);
+        return $reponse->toArray()['bytes'];
+    }
 
 }
