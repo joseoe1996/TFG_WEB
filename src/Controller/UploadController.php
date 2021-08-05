@@ -19,9 +19,11 @@ class UploadController extends AbstractController {
     /**
      * @Route("/inicio/upload", name="upload")
      */
-    public function index(): Response {
+    public function index(FileUploader $uploader): Response {
+        $politicas = $uploader->ListaPoliticas();
         return $this->render('upload/index.html.twig', [
                     'controller_name' => 'UploadController',
+                    'politicas' => $politicas
         ]);
     }
 
@@ -31,6 +33,7 @@ class UploadController extends AbstractController {
     public function subir(Request $request, FileUploader $uploader, httpClient $client, ConexionesRepository $con, politicas $politica) {
 
         $archivo = $request->files->get('formFile');
+        $select = $request->get('politica');
         // $nombreFichero = $uploader->upload($archivo);
         // $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
 
@@ -38,9 +41,8 @@ class UploadController extends AbstractController {
         //Lista de conexiones del susario actual
         $criteria = ['user' => $userlog];
         $conexiones = $con->findBy($criteria);
-        // $politica=new politicas($client);
-        $destino = $uploader->tamaño($archivo,25);
-        var_dump($destino);
+        $destino=$politica->EleccionPolitica($select, $archivo, $arg, $conexiones);
+        var_dump($select);
         return new Response();
 
         $response = $client->copiar_subir($origen, $destino, $nombreFichero);

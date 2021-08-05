@@ -11,12 +11,27 @@
     <h1>Suba un archivo </h1>
 
     <form method="post" enctype="multipart/form-data" action="{{ path('subir') }}">
-        <div class="mb-3">
-            <label for="formFile" class="form-label">Default file input example</label>
-            <input class="form-control" type="file" name="formFile" id="formFile">
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-sm-6 col-md-8">
+
+                    <input class="form-control" type="file" name="formFile" id="formFile">
+                </div>
+                <div class="col-6 col-md-4">
+                    <select class="form-select" aria-label="Default select example" name="politica">
+                        <option selected value="0">Por defecto</option>
+                        {%for id, value in politicas%}
+                            <option value={{value.Tipo}}>{{value.Nombre}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" type="submit">
+                        Subir
+                    </button>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-primary" type="submit">
-            Subir
-        </button>
     </form>
+
 {% endblock %}

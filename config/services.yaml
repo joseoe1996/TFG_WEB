@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     directorio_ficheros: '%kernel.project_dir%\public\uploads\'
+    directorio_politicas: '%kernel.project_dir%\public\politicas\'
     
 services:
     # default configuration for services in *this* file
@@ -25,6 +26,7 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%directorio_ficheros%'
+            $dirPoliticas: '%directorio_politicas%'
             
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

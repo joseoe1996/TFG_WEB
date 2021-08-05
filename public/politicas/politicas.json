@@ -1,0 +1,29 @@
+{
+    "politicas": {
+        "id": {
+            "1": {
+                "Nombre":"Las extensiones van...",
+                "Tipo":"Extension",
+                "Args":"jpg",
+                "Destino":"Jose Alonso Ortega Elías"
+            },
+            "2": {
+                "Nombre":"Arch mayor que..",
+                "Tipo":"Tamaño",
+                "Args":"5000",
+                "Destino":"jose_onedrive"
+            },
+            "3": {
+                "Nombre":"Lo mando a..",
+                "Tipo":"Personal",
+                "Destino":"jose_onedrive"
+            },
+            "4": {
+                "Nombre":"Si el nombre contiene",
+                "Tipo":"Patron",
+                "Args":"*a*",
+                "Destino":"Jose Alonso Ortega Elías"
+            }
+        }
+    }
+}

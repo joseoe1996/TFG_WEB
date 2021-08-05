@@ -4,13 +4,16 @@ namespace App\Service;
 
 use App\Service\httpClient;
 use App\Entity\Conexiones;
+use App\Service\FileUploader;
 
 class politicas {
 
     private $client;
+    private $politica_fichero;
 
-    public function __construct(httpClient $client) {
+    public function __construct(httpClient $client, FileUploader $uploader) {
         $this->client = $client;
+        $this->politica_fichero = $uploader;
     }
 
     public function politicaDefecto($conexiones) {
@@ -30,10 +33,10 @@ class politicas {
         }
         return $eleccion;
     }
-    
+
     public function menorNumeroArch($conexiones) {
 
-        $min= $this->client->size($conexiones[0]->getNombre());
+        $min = $this->client->size($conexiones[0]->getNombre());
         $eleccion = "";
         foreach ($conexiones as $conexion) {
             $actual = $this->client->size($conexion->getNombre());
@@ -43,6 +46,23 @@ class politicas {
             }
         }
         return $eleccion;
+    }
+
+    public function EleccionPolitica(string $tipo, $file, $arg, $conexiones) {
+
+        switch ($tipo) {
+            case "Extension":
+                return $this->politica_fichero->extension($file, $arg);
+            case "Tamaño":
+                return $this->politica_fichero->tamaño($file, $arg);
+            case "Personal":
+                return TRUE;
+            case "Patron":
+                return $this->politica_fichero->ContieneNombre($file, $arg);
+
+            default:
+                return $this->politicaDefecto($conexiones);
+        }
     }
 
 }

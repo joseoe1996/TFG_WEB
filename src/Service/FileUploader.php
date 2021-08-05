@@ -10,10 +10,12 @@ class FileUploader {
 
     private $targetDirectory;
     private $slugger;
+    private $dirPoliticas;
 
-    public function __construct($targetDirectory, SluggerInterface $slugger) {
+    public function __construct($targetDirectory, SluggerInterface $slugger, $dirPoliticas) {
         $this->targetDirectory = $targetDirectory;
         $this->slugger = $slugger;
+        $this->dirPoliticas = $dirPoliticas;
     }
 
     public function upload(UploadedFile $file) {
@@ -59,6 +61,13 @@ class FileUploader {
 
     public function getTargetDirectory() {
         return $this->targetDirectory;
+    }
+
+    public function ListaPoliticas() {
+        $nombre = 'politicas.json';
+        $politicas = new UploadedFile($this->dirPoliticas . $nombre, $nombre);
+        $json = json_decode($politicas->getContent());
+        return (array) $json->politicas->id;
     }
 
 }
