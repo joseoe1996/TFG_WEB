@@ -21,7 +21,7 @@
                     <select class="form-select" aria-label="Default select example" name="politica">
                         <option selected value="0">Por defecto</option>
                         {%for id, value in politicas%}
-                            <option value={{value.Tipo}}>{{value.Nombre}}</option>
+                            <option value={{id}}>{{value.Nombre}}</option>
                         {%endfor%}
                     </select>
                 </div>

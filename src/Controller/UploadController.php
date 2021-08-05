@@ -33,7 +33,7 @@ class UploadController extends AbstractController {
     public function subir(Request $request, FileUploader $uploader, httpClient $client, ConexionesRepository $con, politicas $politica) {
 
         $archivo = $request->files->get('formFile');
-        $select = $request->get('politica');
+        $id = $request->get('politica');
         // $nombreFichero = $uploader->upload($archivo);
         // $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
 
@@ -41,8 +41,8 @@ class UploadController extends AbstractController {
         //Lista de conexiones del susario actual
         $criteria = ['user' => $userlog];
         $conexiones = $con->findBy($criteria);
-        $destino=$politica->EleccionPolitica($select, $archivo, $arg, $conexiones);
-        var_dump($select);
+        $destino=$politica->EleccionPolitica($id, $archivo, $conexiones);
+        var_dump($destino);
         return new Response();
 
         $response = $client->copiar_subir($origen, $destino, $nombreFichero);

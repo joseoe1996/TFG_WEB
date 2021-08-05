@@ -48,21 +48,30 @@ class politicas {
         return $eleccion;
     }
 
-    public function EleccionPolitica(string $tipo, $file, $arg, $conexiones) {
+    public function EleccionPolitica(int $id, $file, $conexiones) {
 
+        $tipo = $this->politica_fichero->Politica_id($id)['Tipo'];
+        $arg = $this->politica_fichero->Politica_id($id)['Args'];
+        $Destino = $this->politica_fichero->Politica_id($id)['Destino'];   
+        
         switch ($tipo) {
             case "Extension":
-                return $this->politica_fichero->extension($file, $arg);
+                $res=$this->politica_fichero->extension($file, $arg) ? $Destino : FALSE;
+                break;
             case "Tamaño":
-                return $this->politica_fichero->tamaño($file, $arg);
+                $res=$this->politica_fichero->tamaño($file, (int) $arg) ? $Destino : FALSE;
+                break;
             case "Personal":
-                return TRUE;
+                $res=$Destino;
+                break;
             case "Patron":
-                return $this->politica_fichero->ContieneNombre($file, $arg);
-
+                $res=$this->politica_fichero->ContieneNombre($file, $arg) ? $Destino : FALSE;
+                break;
             default:
                 return $this->politicaDefecto($conexiones);
         }
+        
+        return ($res==FALSE ? $this->politicaDefecto($conexiones) : $res);
     }
 
 }

@@ -16,12 +16,13 @@
             "3": {
                 "Nombre":"Lo mando a..",
                 "Tipo":"Personal",
+                 "Args":"",
                 "Destino":"jose_onedrive"
             },
             "4": {
                 "Nombre":"Si el nombre contiene",
                 "Tipo":"Patron",
-                "Args":"*a*",
+                "Args":"/*a*/",
                 "Destino":"Jose Alonso Ortega Elías"
             }
         }

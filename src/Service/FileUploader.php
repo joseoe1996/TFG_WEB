@@ -52,7 +52,8 @@ class FileUploader {
 
     public function ContieneNombre(UploadedFile $file, string $patron) {
         $arch_nombre = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        if (preg_match($patron, $arch_nombre)) {
+        var_dump($patron);
+        if (preg_match('/\*a\*/', $arch_nombre)) {
             return TRUE;
         } else {
             return FALSE;
@@ -68,6 +69,18 @@ class FileUploader {
         $politicas = new UploadedFile($this->dirPoliticas . $nombre, $nombre);
         $json = json_decode($politicas->getContent());
         return (array) $json->politicas->id;
+    }
+
+    public function Politica_id(int $id) {
+        $nombre = 'politicas.json';
+        $politicas = new UploadedFile($this->dirPoliticas . $nombre, $nombre);
+        $json = json_decode($politicas->getContent());
+        if ($id == 0) {
+            return ['Tipo' => '', 'Args' => '', 'Destino' => ''];
+        }
+        return ['Tipo' => $json->politicas->id->{$id}->Tipo,
+            'Args' => $json->politicas->id->{$id}->Args,
+            'Destino' => $json->politicas->id->{$id}->Destino];
     }
 
 }
