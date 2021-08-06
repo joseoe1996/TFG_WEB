@@ -160,14 +160,14 @@ class httpClient {
 
     public function copiar_subir($origen, $destino, $nombre_final) {
         $operacion = '/operations/copyfile';
-        $parametros = ['srcFs' => "C:/", 'srcRemote' => $origen, 'dstFs' => $destino, 'dstRemote' => $nombre_final];
+        $parametros = ['srcFs' => "C:/", 'srcRemote' => $origen, 'dstFs' => $destino . ':', 'dstRemote' => $nombre_final];
         $reponse = $this->POST($parametros, $operacion);
         return $reponse;
     }
 
     public function copiar_bajar($origen, $destino, $nombre_final) {
         $operacion = '/operations/copyfile';
-        $parametros = ['srcFs' => $origen, 'srcRemote' => $nombre_final, 'dstFs' => "C:/", 'dstRemote' => $destino];
+        $parametros = ['srcFs' => $origen . ':', 'srcRemote' => $nombre_final, 'dstFs' => "C:/", 'dstRemote' => $destino];
         $reponse = $this->POST($parametros, $operacion);
         return $reponse;
     }
@@ -203,6 +203,7 @@ class httpClient {
         return $reponse->toArray();
     }
 
+    //Creamos un alias para la conexion del movil, para que no sea tan larga
     public function alias(string $nombre, string $alias) {
         $operacion = '/config/create';
         $json = array(
@@ -216,7 +217,7 @@ class httpClient {
         //Creamos la conexion con RCLONE
         $this->POST($parametros, $operacion);
     }
-    
+
     public function size(string $conexion) {
         $operacion = '/operations/size';
         $parametros = ['fs' => $conexion . ':'];

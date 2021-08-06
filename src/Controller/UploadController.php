@@ -34,24 +34,24 @@ class UploadController extends AbstractController {
 
         $archivo = $request->files->get('formFile');
         $id = $request->get('politica');
-        // $nombreFichero = $uploader->upload($archivo);
-        // $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
 
         $userlog = $this->getUser()->getId();
-        //Lista de conexiones del susario actual
+        //Lista de conexiones del usuario actual
         $criteria = ['user' => $userlog];
         $conexiones = $con->findBy($criteria);
-        $destino=$politica->EleccionPolitica($id, $archivo, $conexiones);
-        var_dump($destino);
-        return new Response();
+        $alias = $politica->EleccionPolitica($id, $archivo, $conexiones);
+        $criteria2 = ['alias' => $alias];
+        $destino = $con->findBy($criteria2)[0]->getNombre();
 
+        $nombreFichero = $uploader->upload($archivo);
+        $origen = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreFichero;
+       
         $response = $client->copiar_subir($origen, $destino, $nombreFichero);
 
         if ($response->getStatusCode() == 200) {
             $filesystem = new Filesystem();
             $filesystem->remove($uploader->getTargetDirectory() . $nombreFichero);
         }
-
 
         return $this->redirectToRoute('lista_archivos');
     }
@@ -64,7 +64,7 @@ class UploadController extends AbstractController {
         $archivo = preg_split("[/]", $ruta);
         $nombreArchivo = array_pop($archivo);
         $file = 'Users/josealonso/Desktop/TFG_WEB/public/uploads/' . $nombreArchivo;
-        $client->copiar_bajar($conexion . ':', $file, $ruta);
+        $client->copiar_bajar($conexion, $file, $ruta);
 
         $destino = $uploader->getTargetDirectory() . $nombreArchivo;
 

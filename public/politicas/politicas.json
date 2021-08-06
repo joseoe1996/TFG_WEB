@@ -5,25 +5,25 @@
                 "Nombre":"Las extensiones van...",
                 "Tipo":"Extension",
                 "Args":"jpg",
-                "Destino":"Jose Alonso Ortega Elías"
+                "Destino":"onedrive"
             },
             "2": {
                 "Nombre":"Arch mayor que..",
                 "Tipo":"Tamaño",
-                "Args":"5000",
-                "Destino":"jose_onedrive"
+                "Args":"< 50000",
+                "Destino":"Funciona"
             },
             "3": {
                 "Nombre":"Lo mando a..",
                 "Tipo":"Personal",
                  "Args":"",
-                "Destino":"jose_onedrive"
+                "Destino":"Funciona"
             },
             "4": {
                 "Nombre":"Si el nombre contiene",
                 "Tipo":"Patron",
-                "Args":"/*a*/",
-                "Destino":"Jose Alonso Ortega Elías"
+                "Args":"/.*a.*/",
+                "Destino":"Funciona"
             }
         }
     }

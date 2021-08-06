@@ -21,7 +21,7 @@ class FileUploader {
     public function upload(UploadedFile $file) {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+        $fileName = $safeFilename . '.' . $file->guessExtension();
 
         try {
             $file->move($this->getTargetDirectory(), $fileName);
@@ -41,19 +41,32 @@ class FileUploader {
         }
     }
 
-    public function tamaño(UploadedFile $file, int $tam) {
+    public function tamaño(UploadedFile $file, $args) {
         $arch_tam = filesize($file);
-        if ($arch_tam < $tam) {
-            return TRUE;
-        } else {
-            return FALSE;
+        $signo = preg_split('/ /', $args)[0];
+        $tamaño = preg_split('/ /', $args)[1];
+
+        $res = NULL;
+        switch ($signo) {
+            case '>':
+                $res = $arch_tam > $tamaño ? TRUE : FALSE;
+                break;
+            case '<':
+                $res = $arch_tam < $tamaño ? TRUE : FALSE;
+                break;
+            case '=':
+                $res = $arch_tam == $tamaño ? TRUE : FALSE;
+                break;
+            default:
+                break;
         }
+        return $res;
     }
 
     public function ContieneNombre(UploadedFile $file, string $patron) {
         $arch_nombre = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         var_dump($patron);
-        if (preg_match('/\*a\*/', $arch_nombre)) {
+        if (preg_match($patron, $arch_nombre)) {
             return TRUE;
         } else {
             return FALSE;

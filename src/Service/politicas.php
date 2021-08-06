@@ -28,7 +28,7 @@ class politicas {
             $actual = $this->client->about($conexion->getNombre())['free'];
             if ($actual > $max) {
                 $max = $actual;
-                $eleccion = $conexion->getNombre();
+                $eleccion = $conexion->getAlias();
             }
         }
         return $eleccion;
@@ -59,7 +59,7 @@ class politicas {
                 $res=$this->politica_fichero->extension($file, $arg) ? $Destino : FALSE;
                 break;
             case "Tamaño":
-                $res=$this->politica_fichero->tamaño($file, (int) $arg) ? $Destino : FALSE;
+                $res=$this->politica_fichero->tamaño($file, $arg) ? $Destino : FALSE;
                 break;
             case "Personal":
                 $res=$Destino;
